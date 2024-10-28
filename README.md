@@ -116,9 +116,7 @@ This mapping demonstrates how the Gita provides practical guidance for dealing w
 
 ## Technical Implementation
 
-### Suggested Tech Stack
-
-To implement graphGita effectively, consider using the following technologies:
+### Tech Stack
 
 - **Programming Language**: Python
 - **Web Framework**: Flask or FastAPI for building APIs
