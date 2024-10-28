@@ -142,8 +142,8 @@ To implement graphGita effectively, consider using the following technologies:
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
-   cd <repository-directory>
+   git clone https://github.com/bhaskatripathi/graphGita
+   cd graphGita
    ```
 
 2. Install required packages:
