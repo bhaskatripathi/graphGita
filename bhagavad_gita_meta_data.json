@@ -1,0 +1,50 @@
+{
+  "chapters": [
+    {
+      "number": 1,
+      "name": "Arjuna Vishada Yoga",
+      "sanskrit_name": "अर्जुन विषाद योग",
+      "english_name": "Arjuna's Dilemma",
+      "total_shlokas": 47,
+      "summary": "Arjuna Vishada Yoga - Arjuna's Despondency",
+      "primary_themes": ["Confusion", "Fear", "Moral Dilemma", "Doubt"],
+      "main_characters": [
+        {"name": "Arjuna", "role": "Main protagonist"},
+        {"name": "Krishna", "role": "Divine guide"},
+        {"name": "Duryodhana", "role": "Antagonist"},
+        {"name": "Bhishma", "role": "Elder patriarch"},
+        {"name": "Dronacharya", "role": "Teacher"}
+      ]
+    }
+  ],
+  "problem_categories": [
+    {
+      "name": "anger",
+      "related_chapters": [2, 16],
+      "primary_theme": "Emotional Control"
+    },
+    {
+      "name": "confusion",
+      "related_chapters": [1, 2, 3],
+      "primary_theme": "Mental Clarity"
+    }
+  ],
+  "relationships": {
+    "character_relations": [
+      {
+        "character1": "Krishna",
+        "character2": "Arjuna",
+        "relationship_type": "Guide-Disciple"
+      }
+    ],
+    "theme_progression": [
+      {
+        "theme": "Confusion",
+        "progression": [
+          {"chapter": 1, "role": "Introduction"},
+          {"chapter": 2, "role": "Resolution"}
+        ]
+      }
+    ]
+  }
+}
