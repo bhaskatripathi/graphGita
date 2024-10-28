@@ -5,7 +5,7 @@ import os
 import re
 
 # Set up OpenAI API key
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = "sk-"
 client = OpenAI()
 
 with open("bhagavad_gita_meta_data.json", "r") as f:
