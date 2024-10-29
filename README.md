@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project, named **graphGita**, is the first modern interpretation of the Bhagavad Gita that utilizes **mathematical analysis** and **Knowledge Graph** technology. The text is transformed into a structured format, enabling exploration of the Gita's teachings through tools such as **Graph Neural Networks (GNNs)** and **Monte Carlo Tree Search (MCTS)**. This approach improves understanding of philosophical concepts and provides relevant insights for contemporary readers.
+This project, **graphGita**, is the first modern re-interpretation of the Bhagavad Gita that utilizes **Monte Carlo Tree Search** enabled **Knowledge Graphs**. The text is transformed into a structured format, enabling exploration of the Gita's teachings through tools such as **Graph Neural Networks (GNNs)** and **Monte Carlo Tree Search (MCTS)**. This approach improves understanding of philosophical concepts and provides relevant insights for contemporary readers.
 
 ### Why Graph the Bhagvad Gita to Re-Understand it in Modern Times ?
 
