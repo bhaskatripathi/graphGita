@@ -4,6 +4,9 @@
 
 This project, **graphGita**, is the first modern re-interpretation of the Bhagavad Gita that utilizes **Monte Carlo Tree Search** enabled **Knowledge Graphs**. The text is transformed into a structured format, enabling exploration of the Gita's teachings through tools such as **Graph Neural Networks (GNNs)** and **Monte Carlo Tree Search (MCTS)**. This approach improves understanding of philosophical concepts and provides relevant insights for contemporary readers.
 
+### Demo app link
+https://graphgita.streamlit.app/
+
 ### Why Graph the Bhagvad Gita to Re-Understand it in Modern Times ?
 
 There is a significant need to reinterpret ancient texts like the Bhagavad Gita in today's context. The teachings offer valuable perspectives on ethics, human behavior, and spirituality that remain applicable. However, traditional formats often fail to engage modern readers effectively. Advanced technologies, including knowledge graphs and machine learning, can make the wisdom of the Gita more accessible and relevant.
