@@ -101,7 +101,16 @@ The Bhagavad Gita offers guidance for various life challenges. Below is a mappin
 | Temptation | Dealing with temptations | 2:60-61, 2:70, 7:14 |
 | Mental Control | Managing an uncontrolled mind | 6:5-6, 6:26, 6:35 |
 
-This mapping demonstrates how the Gita provides practical guidance for dealing with common human challenges. Each reference contains specific insights and solutions that can be applied in modern contexts.
+#Graph Examples
+![GraphGita Overview](images/1.png)
+*Figure 1: Overview of the GraphGita Knowledge Graph.*
+![Chapter Relationships](images/2.png)
+*Figure 2: Visualization of relationships between chapters.*
+![Philosophical Concepts](images/3.png)
+*Figure 3: Mapping of philosophical concepts within the Gita.*
+![User Interface](images/4.png)
+*Figure 4: Screenshot of the user interface for exploring the Knowledge Graph.*
+
 
 > **Note**: The verse numbers are presented in `chapter:verse` format. Ranges (e.g., 16:1-3) indicate consecutive verses addressing the same topic.
 
