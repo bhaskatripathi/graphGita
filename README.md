@@ -186,10 +186,19 @@ Contributions are welcome. Please submit a pull request or open an issue for any
 
 This project is licensed under the MIT License. See the LICENSE file for details.
 
-## Acknowledgments
-
-- The Bhagavad Gita sources from Gitapress and Archive.org.
-- Boto3 and Requests libraries for AWS and HTTP interactions.
-- Claude API for generating insights based on user queries.
-- Contributions from Indic datasets that enhance understanding of ancient philosophies through modern frameworks.
+## Future Pipeline
+1. Create a Knowledge Graph based RAG on more than 200 Gita versions and find the overlaping philosophie, conflicting, and their relationships to the original Bhagwad Gita.
+2. Integrate more sophisticated retrieval technologies for multi-hop query improvements.
+3. Integrate below versions of popular Gita books:
+- *Bhagavad Gita*: The most famous, part of the Mahabharata, focusing on duty and righteousness.
+- *Anugita*: A conversation between Arjuna and Krishna after the war.
+- *Avadhuta Gita*: Emphasizes the non-dual nature of reality.
+- *Ashtavakra Gita*: A dialogue on renunciation between King Janak and Ashtavakra.
+- *Ishvara Gita*: Found in the Kurma Purana.
+- *Kapila Gita*: From the Bhagavatam, discussing Sankhya philosophy.
+- *Ganesha Gita*: Related to Lord Ganesha, found in the Ganesh Purana.
+- *Devi Gita*: Focuses on the divine feminine aspect.
+- *Bhagavad-gita As It Is* by A.C. Bhaktivedanta Swami Prabhupada ISKCON
+- *Bhagavad-Gita in English* from the International Gita Society
+- The *Divine Life Society's version* of the Bhagavad Gita
 
