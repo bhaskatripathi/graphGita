@@ -196,7 +196,8 @@ If you use **graphGita** in your research or project, please cite it as follows:
 }
 ```
 ## Star History
-<iframe style="width:100%;height:auto;min-width:600px;min-height:400px;" src="https://star-history.com/embed?secret=Z2l0aHViX3BhdF8xMUFJTU1JSkEwVlQ3ZmZ0Z0x4eXB6X2l3dDN1MXAwbnpEWjllSVdLUnlyWERtdjJ3U3h1dTdheDhwVlI5Mjk4SFNJS0lUN0JSMjl2azFqZW55#bhaskatripathi/graphGita&Date" frameBorder="0"></iframe>
+
+[![Star History Chart](https://api.star-history.com/svg?repos=bhaskatripathi/graphGita&type=Date)](https://star-history.com/#bhaskatripathi/graphGita&Date)
 
 ## License
 
