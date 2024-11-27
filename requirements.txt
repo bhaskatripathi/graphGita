@@ -3,3 +3,4 @@ networkx
 matplotlib
 streamlit-d3graph
 scipy
+scikit-learn
