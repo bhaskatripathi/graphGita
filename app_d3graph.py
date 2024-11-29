@@ -1,57 +1,9 @@
-# This is the final version with agraph as d3-graph was not very versatile and had responsive rendering issues on the modbile.
 import streamlit as st
 import json
 import networkx as nx
-from streamlit_agraph import agraph, Node, Edge, Config
-from typing import Dict, List, Optional, Union, Tuple
+from streamlit_d3graph import d3graph
+from typing import Dict, List, Optional, Union
 import os
-
-def create_node(id: str, label: str, node_type: str) -> Node:
-    """Helper function to create nodes with consistent styling"""
-    type_to_style = {
-        'problem': {'color': '#FFD700', 'size': 30, 'shape': 'dot'},    # Yellow
-        'chapter': {'color': '#87CEEB', 'size': 25, 'shape': 'dot'},    # Sky blue
-        'shloka': {'color': '#F08080', 'size': 20, 'shape': 'dot'},     # Light coral
-        'theme': {'color': '#90EE90', 'size': 35, 'shape': 'dot'},      # Light green
-        'character': {'color': '#FFD700', 'size': 30, 'shape': 'dot'},  # Changed from 'circularImage' to 'dot'
-        'event': {'color': '#87CEEB', 'size': 25, 'shape': 'dot'}       # Sky blue
-    }
-    
-    style = type_to_style.get(node_type, {'color': '#FFFFFF', 'size': 25, 'shape': 'dot'})
-    
-    return Node(
-        id=id,
-        label=label,
-        size=style['size'],
-        shape=style['shape'],
-        color=style['color']
-    )
-
-def create_edge(source: str, target: str, label: str = "") -> Edge:
-    """Helper function to create edges with consistent styling"""
-    return Edge(
-        source=source,
-        target=target,
-        label=label,
-        color="#666666",
-        smooth={'type': 'curvedCW', 'roundness': 0.2}
-    )
-
-def create_agraph_config() -> Config:
-    """Create consistent agraph configuration"""
-    config = Config(
-        width=750,
-        height=950,
-        directed=True,
-        physics=True,
-        hierarchical=False,
-        nodeHighlightBehavior=True,
-        node={'labelProperty': 'label'},
-        link={'labelProperty': 'label', 'renderLabel': True},
-        highlightColor="#F7A7A6",
-        collapsible=True
-    )
-    return config
 
 class GitaGraphRAG:
     def __init__(self):
@@ -133,69 +85,31 @@ class GitaGraphRAG:
                            if sh['shloka_number'] == shloka), None)
         return None
 
-    def visualize_chapter_graph(self, node_id: str) -> Tuple[List[Node], List[Edge]]:
-        """Create agraph visualization of the graph for a specific node"""
-        nodes = []
-        edges = []
-        seen_nodes = set()  # To prevent duplicate nodes
-        
+    def visualize_chapter_graph(self, node_id: str) -> d3graph:
+        """Create labeled D3 visualization of the graph for a specific node"""
         # Create subgraph for the selected node
         subgraph = nx.ego_graph(self.G, node_id, radius=1)
+        adjmat = nx.adjacency_matrix(subgraph).todense()
         
-        # Add nodes
-        for node in subgraph.nodes():
-            if node not in seen_nodes:
-                node_data = self.G.nodes[node]
-                node_type = node_data['type']
-                label = f"{node_data.get('name', '')} {node.split('_')[-1]}"
-                
-                nodes.append(create_node(node, label, node_type))
-                seen_nodes.add(node)
+        # Get node types and create color mapping
+        node_types = [self.G.nodes[node]['type'] for node in subgraph.nodes()]
+        type_to_color = {
+            'problem': '#FFD700',  # Yellow
+            'chapter': '#87CEEB',  # Sky blue
+            'shloka': '#F08080'    # Light coral
+        }
+        node_colors = [type_to_color.get(t, '#90EE90') for t in node_types]
         
-        # Add edges
-        for source, target in subgraph.edges():
-            edges.append(create_edge(source, target))
+        # Create labeled visualization
+        d3 = d3graph(collision=1, charge=250)
+        d3.graph(adjmat)
+        d3.set_node_properties(
+            label=list(subgraph.nodes()),
+            color=node_colors,
+            cmap="Set1"
+        )
         
-        return nodes, edges
-
-    def visualize_theme_relationships(self, selected_theme: str, related_chapters: list) -> Tuple[List[Node], List[Edge]]:
-        """Create agraph visualization showing relationships between theme, chapters, and shlokas"""
-        nodes = []
-        edges = []
-        seen_nodes = set()
-        
-        # Add theme node
-        theme_id = f"Theme_{selected_theme}"
-        nodes.append(create_node(theme_id, selected_theme, 'theme'))
-        seen_nodes.add(theme_id)
-        
-        # Add related chapters and shlokas
-        for chapter in related_chapters:
-            chapter_id = f"Chapter_{chapter['number']}"
-            if chapter_id not in seen_nodes:
-                nodes.append(create_node(
-                    chapter_id,
-                    f"Chapter {chapter['number']}: {chapter['name']}",
-                    'chapter'
-                ))
-                seen_nodes.add(chapter_id)
-                edges.append(create_edge(theme_id, chapter_id, "contains"))
-            
-            # Add relevant shlokas
-            for shloka in chapter.get('shlokas', []):
-                if any(kw.lower() in selected_theme.lower() for kw in shloka.get('keywords', [])):
-                    shloka_id = f"Shloka_{chapter['number']}_{shloka['shloka_number']}"
-                    if shloka_id not in seen_nodes:
-                        nodes.append(create_node(
-                            shloka_id,
-                            f"Shloka {shloka['shloka_number']}",
-                            'shloka'
-                        ))
-                        seen_nodes.add(shloka_id)
-                        edges.append(create_edge(chapter_id, shloka_id, "contains"))
-                        edges.append(create_edge(theme_id, shloka_id, "references"))
-        
-        return nodes, edges
+        return d3
 
     def display_chapter_insights(self):
         """Display chapter insights with character-centric relationships."""
@@ -228,102 +142,216 @@ class GitaGraphRAG:
 
         st.markdown("### Character Relationship Graph")
         
-        # Create character relationship graph
-        nodes = []
-        edges = []
-        seen_nodes = set()
+        # Initialize graph
+        character_graph = nx.Graph()
         
+        # Add nodes and edges
         key_events = selected_chapter.get("key_events", [])
         for event in key_events:
             event_id = f"Event_{event['event']}"
-            if event_id not in seen_nodes:
-                nodes.append(create_node(event_id, event['event'], 'event'))
-                seen_nodes.add(event_id)
+            character_graph.add_node(event_id, type='event')
             
+            # Add character nodes and connect to event
             for char in event['characters']:
                 char_id = f"Character_{char}"
-                if char_id not in seen_nodes:
-                    nodes.append(create_node(char_id, char, 'character'))
-                    seen_nodes.add(char_id)
-                edges.append(create_edge(char_id, event_id))
+                character_graph.add_node(char_id, type='character')
+                character_graph.add_edge(char_id, event_id)
             
+            # Add shloka nodes and connect to event
             for shloka_num in event['shlokas']:
                 shloka_id = f"Shloka_{selected_chapter_num}_{shloka_num}"
-                if shloka_id not in seen_nodes:
-                    nodes.append(create_node(shloka_id, f"Shloka {shloka_num}", 'shloka'))
-                    seen_nodes.add(shloka_id)
-                edges.append(create_edge(event_id, shloka_id))
+                character_graph.add_node(shloka_id, type='shloka')
+                character_graph.add_edge(event_id, shloka_id)
 
-        # Display Character Details
-        st.markdown("### Character Details")
+        # Convert to adjacency matrix
+        adjmat = nx.adjacency_matrix(character_graph).todense()
+        d3 = d3graph(collision=1, charge=250, slider=[0, 7])
+        d3.graph(adjmat)
+
+        # Get exact list of nodes that will be used by d3graph
+        nodes = list(character_graph.nodes())
         
-        # Get all unique characters from events
-        unique_characters = set()
-        for event in key_events:
-            unique_characters.update(event['characters'])
+        # Create colors list matching exactly with nodes
+        node_colors = []
+        node_labels = []
+        node_sizes = []
         
-        for char in unique_characters:
-            with st.expander(f"{char}", expanded=False):
-                # Display character description
-                char_info = next((c for c in selected_chapter.get('characters', []) 
-                                if c['name'] == char), None)
-                if char_info:
-                    st.markdown("**Description:**")
-                    st.write(char_info['description'])
-                
-                # Find events involving this character
-                char_events = [event for event in key_events if char in event['characters']]
-                
-                if char_events:
-                    st.markdown("**Associated Events and Teachings:**")
-                    for event in char_events:
-                        st.markdown(f"### {event['event']}")
-                        
-                        # Get and display shloka details
-                        for shloka_num in event['shlokas']:
-                            shloka = next((s for s in selected_chapter['shlokas'] 
-                                        if s['shloka_number'] == shloka_num), None)
+        for node in nodes:
+            node_type = character_graph.nodes[node]['type']
+            # Assign colors based on type
+            if node_type == 'character':
+                node_colors.append('#FFD700')  # Gold for characters
+                node_sizes.append(30)
+            elif node_type == 'event':
+                node_colors.append('#87CEEB')  # Sky blue for events
+                node_sizes.append(25)
+            else:  # shloka
+                node_colors.append('#F08080')  # Light coral for shlokas
+                node_sizes.append(20)
+            
+            # Create readable labels
+            label = node.replace('_', ' ').replace(f'{selected_chapter_num} ', '')
+            node_labels.append(label)
+
+        # Set node properties ensuring all arrays match exactly
+        d3.set_node_properties(
+            label=node_labels,
+            color=node_colors,
+            size=node_sizes,
+            edge_color="#00FFFF",
+            cmap="Set1"
+        )
+        
+        d3.show()
+
+        # Wrap Character Details in an expander
+        with st.expander("Character Details", expanded=False):
+            unique_characters = set()
+            for event in key_events:
+                unique_characters.update(event['characters'])
+            
+            for char in unique_characters:
+                # Use a container for each character
+                char_container = st.container()
+                with char_container:
+                    st.markdown(f"## {char}")
+                    
+                    # Get character description
+                    char_info = next((c for c in selected_chapter.get('characters', []) 
+                                    if c['name'] == char), None)
+                    if char_info:
+                        st.markdown("**Description:**")
+                        st.write(char_info['description'])
+                    
+                    # Find events involving this character
+                    char_events = [event for event in key_events if char in event['characters']]
+                    
+                    if char_events:
+                        st.markdown("**Associated Events and Teachings:**")
+                        for event in char_events:
+                            st.markdown(f"### {event['event']}")
                             
-                            if shloka:
-                                st.markdown(f"#### Shloka {shloka_num}")
-                                
-                                if 'sanskrit_text' in shloka:
-                                    st.markdown("**Sanskrit Text:**")
-                                    st.text(shloka['sanskrit_text'])
-                                
-                                if 'transliteration' in shloka:
-                                    st.markdown("**Transliteration:**")
-                                    st.write(shloka['transliteration'])
-                                
-                                if 'meaning' in shloka:
-                                    st.markdown("**Meaning:**")
-                                    st.write(shloka['meaning'])
-                                
-                                if 'interpretation' in shloka:
-                                    st.markdown("**Interpretation:**")
-                                    st.write(shloka['interpretation'])
-                                
-                                if 'life_application' in shloka:
-                                    st.markdown("**Life Application:**")
-                                    st.write(shloka['life_application'])
-                                
-                                st.markdown("---")
-                
-                # Display character relationships
-                char_relationships = [
-                    rel for rel in selected_chapter.get('character_relationships', [])
-                    if char in rel['from'] or char in rel['to']
-                ]
-                
-                if char_relationships:
-                    st.markdown("**Character Relationships:**")
-                    for rel in char_relationships:
-                        st.markdown(f"- {rel['description']}")
+                            # Display detailed shloka information
+                            for shloka_num in event['shlokas']:
+                                shloka = next((s for s in selected_chapter['shlokas'] 
+                                            if s['shloka_number'] == shloka_num), None)
+                                if shloka:
+                                    # Use a separate container for each shloka
+                                    shloka_container = st.container()
+                                    with shloka_container:
+                                        st.markdown(f"#### Shloka {shloka_num}")
+                                        
+                                        if 'sanskrit_text' in shloka:
+                                            st.markdown("**Sanskrit Text:**")
+                                            st.text(shloka['sanskrit_text'])
+                                        
+                                        if 'transliteration' in shloka:
+                                            st.markdown("**Transliteration:**")
+                                            st.write(shloka['transliteration'])
+                                        
+                                        st.markdown("**Meaning:**")
+                                        st.write(shloka['meaning'])
+                                        
+                                        if 'interpretation' in shloka:
+                                            st.markdown("**Interpretation:**")
+                                            st.write(shloka['interpretation'])
+                                        
+                                        if 'life_application' in shloka:
+                                            st.markdown("**Life Application:**")
+                                            st.write(shloka['life_application'])
+                    
+                    # Find character relationships
+                    char_relationships = [
+                        rel for rel in selected_chapter.get('character_relationships', [])
+                        if char in rel['from'] or char in rel['to']
+                    ]
+                    
+                    if char_relationships:
+                        st.markdown("**Character Relationships:**")
+                        for rel in char_relationships:
+                            st.markdown(f"- {rel['description']}")
+                    
+                    # Add a horizontal line between characters
+                    st.markdown("---")
 
-        # Display the graph
-        config = create_agraph_config()
-        agraph(nodes=nodes, edges=edges, config=config)
+    def visualize_theme_relationships(self, selected_theme: str, related_chapters: list) -> d3graph:
+        """Create a D3 visualization showing relationships between theme, chapters, and shlokas"""
+        # Create a focused graph for the theme
+        theme_graph = nx.Graph()
+        theme_id = f"Theme_{selected_theme}"
+        theme_graph.add_node(theme_id, type='theme', name=selected_theme)
+        
+        # Add related chapters and shlokas
+        for chapter in related_chapters:
+            chapter_id = f"Chapter_{chapter['number']}"
+            theme_graph.add_node(chapter_id, 
+                                type='chapter',
+                                name=chapter['name'])
+            theme_graph.add_edge(theme_id, chapter_id)
+            
+            # Add relevant shlokas from this chapter
+            relevant_shlokas = [
+                shloka for shloka in chapter.get('shlokas', [])
+                if any(kw.lower() in selected_theme.lower() 
+                    for kw in shloka.get('keywords', []))
+            ]
+            
+            for shloka in relevant_shlokas:
+                shloka_id = f"Shloka_{chapter['number']}_{shloka['shloka_number']}"
+                theme_graph.add_node(shloka_id, 
+                                    type='shloka',
+                                    number=shloka['shloka_number'])
+                # Connect shloka to both chapter and theme
+                theme_graph.add_edge(chapter_id, shloka_id)
+                theme_graph.add_edge(theme_id, shloka_id)
 
+        # Convert to D3 graph
+        adjmat = nx.adjacency_matrix(theme_graph).todense()
+        d3 = d3graph(collision=1, charge=450)  # Increased charge for better spacing
+        d3.graph(adjmat)
+
+        # Get the nodes in the same order as they'll be used by d3graph
+        nodes = list(theme_graph.nodes())
+
+        # Create colors and sizes list matching exactly with nodes
+        node_colors = []
+        node_sizes = []
+        node_labels = []
+
+        for node in nodes:
+            node_type = theme_graph.nodes[node].get('type')
+            # Assign colors and sizes based on node type
+            if node_type == 'theme':
+                node_colors.append('#90EE90')  # Light green for theme
+                node_sizes.append(40)
+                node_labels.append(node.replace('Theme_', ''))
+            elif node_type == 'chapter':
+                node_colors.append('#87CEEB')  # Sky blue for chapters
+                node_sizes.append(30)
+                node_labels.append(node.replace('_', ' '))
+            else:  # shloka
+                node_colors.append('#F08080')  # Light coral for shlokas
+                node_sizes.append(20)
+                # Create a shorter label for shlokas
+                chapter_num = node.split('_')[1]
+                shloka_num = node.split('_')[2]
+                node_labels.append(f"Sh {shloka_num}")
+
+        # Set node properties
+        d3.set_node_properties(
+            label=node_labels,
+            color=node_colors,
+            size=node_sizes,
+            edge_color="#00FFFF",
+            cmap="Set1"
+        )
+        
+        return d3
+
+
+
+
+    
 def get_themes_from_chapters(data):
     """Extract all unique themes from chapters"""
     themes = set()
@@ -410,9 +438,8 @@ def main():
             # Display the graph at the bottom
             st.markdown("---")  # Add a separator
             st.markdown("### Chapter Knowledge Graph")
-            nodes, edges = rag.visualize_chapter_graph(f"Chapter_{selected_chapter_num}")
-            config = create_agraph_config()
-            agraph(nodes=nodes, edges=edges, config=config)
+            d3_graph = rag.visualize_chapter_graph(f"Chapter_{selected_chapter_num}")
+            d3_graph.show()
 
     elif view_option == "Ontologies of Wisdom ":
         st.header("Knowledge Pathways from Bhagavad Gita for Wisdom of Life")
@@ -461,9 +488,8 @@ def main():
             # Display the problem-solution graph at the bottom
             st.subheader("Problem-Solution Graph")
             problem_id = f"Problem_{selected_problem}"
-            nodes, edges = rag.visualize_chapter_graph(problem_id)
-            config = create_agraph_config()
-            agraph(nodes=nodes, edges=edges, config=config)
+            d3 = rag.visualize_chapter_graph(problem_id)
+            d3.show()
     
     elif view_option == "Philosophical Themes Triples":
         st.header("Philosophical Themes Navigator")
@@ -551,9 +577,8 @@ def main():
             
             # Display theme relationships graph at the bottom
             st.markdown("### Theme Relationships")
-            nodes, edges = rag.visualize_theme_relationships(selected_theme, related_chapters)
-            config = create_agraph_config()
-            agraph(nodes=nodes, edges=edges, config=config)
+            d3 = rag.visualize_theme_relationships(selected_theme, related_chapters)
+            d3.show()
 
     if view_option == "Ontology of Characters":
         rag.display_chapter_insights()
