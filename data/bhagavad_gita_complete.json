@@ -451,6 +451,212 @@
                     "shloka": 35
                 }
             ]
+        },
+        "work_life_balance": {
+            "description": "Managing professional duties while maintaining personal life and spiritual growth",
+            "references": [
+                {
+                    "chapter": 3,
+                    "shloka": 8
+                },
+                {
+                    "chapter": 6,
+                    "shloka": 17
+                },
+                {
+                    "chapter": 2,
+                    "shloka": 48
+                },
+                {
+                    "chapter": 6,
+                    "shloka": 16
+                },
+                {
+                    "chapter": 18,
+                    "shloka": 33
+                }
+            ]
+        },
+        "skill_upgrade": {
+            "description": "Continuous learning and professional growth while maintaining the right attitude",
+            "references": [
+                {
+                    "chapter": 18,
+                    "shloka": 46
+                },
+                {
+                    "chapter": 4,
+                    "shloka": 35
+                },
+                {
+                    "chapter": 4,
+                    "shloka": 39  
+                },
+                {
+                    "chapter": 18,
+                    "shloka": 48
+                },
+                {
+                    "chapter": 3,
+                    "shloka": 35
+                }
+            ]
+        },
+
+        "workplace_stress": {
+            "description": "Managing stress and pressure in professional environment",
+            "references": [
+                {
+                    "chapter": 2,
+                    "shloka": 14  
+                },
+                {
+                    "chapter": 2,
+                    "shloka": 47  
+                },
+                {
+                    "chapter": 12,
+                    "shloka": 18  
+                },
+                {
+                    "chapter": 5,
+                    "shloka": 20  
+                },
+                {
+                    "chapter": 18,
+                    "shloka": 26  
+                }
+            ]
+        },
+
+        "career_decisions": {
+            "description": "Making important career choices and handling professional dilemmas",
+            "references": [
+                {
+                    "chapter": 18,
+                    "shloka": 63  
+                },
+                {
+                    "chapter": 3,
+                    "shloka": 35  
+                },
+                {
+                    "chapter": 2,
+                    "shloka": 7  
+                },
+                {
+                    "chapter": 18,
+                    "shloka": 58  
+                },
+                {
+                    "chapter": 2,
+                    "shloka": 41  
+                }
+            ]
+        },
+
+        "team_conflicts": {
+            "description": "Managing interpersonal relationships and conflicts in professional teams",
+            "references": [
+                {
+                    "chapter": 12,
+                    "shloka": 13  
+                },
+                {
+                    "chapter": 12,
+                    "shloka": 18  
+                },
+                {
+                    "chapter": 2,
+                    "shloka": 38  
+                },
+                {
+                    "chapter": 16,
+                    "shloka": 2  
+                },
+                {
+                    "chapter": 13,
+                    "shloka": 8  
+                }
+            ]
+        },
+
+        "digital_distractions": {
+            "description": "Managing focus and attention in the age of digital technology",
+            "references": [
+                {
+                    "chapter": 6,
+                    "shloka": 26  
+                },
+                {
+                    "chapter": 2,
+                    "shloka": 62  
+                },
+                {
+                    "chapter": 2,
+                    "shloka": 70  
+                },
+                {
+                    "chapter": 6,
+                    "shloka": 35  
+                },
+                {
+                    "chapter": 18,
+                    "shloka": 51  
+                }
+            ]
+        },
+
+        "imposter_syndrome": {
+            "description": "Dealing with self-doubt and feelings of inadequacy in professional life",
+            "references": [
+                {
+                    "chapter": 18,
+                    "shloka": 46  
+                },
+                {
+                    "chapter": 3,
+                    "shloka": 33  
+                },
+                {
+                    "chapter": 2,
+                    "shloka": 47  
+                },
+                {
+                    "chapter": 16,
+                    "shloka": 1  
+                },
+                {
+                    "chapter": 4,
+                    "shloka": 40  
+                }
+            ]
+        },
+
+        "work_ethics": {
+            "description": "Maintaining integrity and ethical behavior in professional life",
+            "references": [
+                {
+                    "chapter": 16,
+                    "shloka": 1  
+                },
+                {
+                    "chapter": 16,
+                    "shloka": 2  
+                },
+                {
+                    "chapter": 18,
+                    "shloka": 47  
+                },
+                {
+                    "chapter": 3,
+                    "shloka": 19  
+                },
+                {
+                    "chapter": 2,
+                    "shloka": 38  
+                }
+            ]
         }
     },
     "chapters": [
@@ -4190,39 +4396,94 @@
             ],
             "characters": [
                 {
-                    "name": "Error",
-                    "description": "Failed to parse characters. Error: Expecting value: line 1 column 1 (char 0)"
+                    "name": "Krishna",
+                    "description": "The Supreme Lord, explaining the path of Karma Yoga and the importance of performing actions without attachment"
+                },
+                {
+                    "name": "Arjuna",
+                    "description": "The warrior seeking clarity about action versus inaction, and learning about the proper way to perform duties"
                 }
             ],
             "themes": [
                 {
-                    "name": "Error",
-                    "description": "Failed to parse themes. Error: Expecting value: line 1 column 1 (char 0)"
+                    "name": "Karma Yoga",
+                    "description": "The primary theme of performing actions without attachment to results, as a means of spiritual purification"
+                },
+                {
+                    "name": "Duty and Action",
+                    "description": "The importance of performing prescribed duties and understanding the difference between action, inaction, and wrong action"
+                },
+                {
+                    "name": "Sense Control",
+                    "description": "The role of sense control in performing actions without attachment and maintaining spiritual focus"
+                },
+                {
+                    "name": "Yajna (Sacrifice)",
+                    "description": "The concept of performing actions as sacrifices and understanding the spiritual nature of work"
+                },
+                {
+                    "name": "Self-Realization",
+                    "description": "The ultimate goal of karma yoga leading to self-realization and freedom from bondage"
                 }
             ],
             "character_relationships": [
                 {
-                    "from": "Error",
-                    "to": "Error",
-                    "description": "Failed to parse relationships. Error: Expecting value: line 1 column 1 (char 0)"
+                    "from": "Krishna",
+                    "to": "Arjuna",
+                    "description": "Krishna guides Arjuna in understanding the proper way to perform actions and the philosophy of Karma Yoga"
                 }
             ],
             "theme_relationships": [
                 {
-                    "theme": "Error",
-                    "shlokas": [],
-                    "description": "Failed to parse theme relationships. Error: Expecting value: line 1 column 1 (char 0)"
+                    "theme": "Karma Yoga",
+                    "shlokas": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+                    "description": "These verses establish the fundamental principles of Karma Yoga and the importance of performing actions without attachment"
+                },
+                {
+                    "theme": "Duty and Action",
+                    "shlokas": [14, 15, 16, 17, 18, 19, 20],
+                    "description": "These shlokas explain the nature of action, inaction, and the importance of performing prescribed duties"
+                },
+                {
+                    "theme": "Sense Control",
+                    "shlokas": [34, 35, 36, 37, 38, 39, 40, 41],
+                    "description": "These verses discuss the importance of controlling the senses while performing actions"
+                },
+                {
+                    "theme": "Yajna",
+                    "shlokas": [9, 10, 11, 12, 13, 14, 15],
+                    "description": "These shlokas explain how actions should be performed as sacrifices"
+                },
+                {
+                    "theme": "Self-Realization",
+                    "shlokas": [42, 43, 44, 45, 46, 47],
+                    "description": "These verses connect the practice of Karma Yoga with ultimate self-realization"
                 }
             ],
             "key_events": [
                 {
-                    "event": "Error parsing events. Error: Expecting value: line 1 column 1 (char 0)",
-                    "shlokas": [],
-                    "characters": []
+                    "event": "Introduction to Karma Yoga",
+                    "shlokas": [1, 2, 3, 4, 5],
+                    "characters": ["Krishna", "Arjuna"]
+                },
+                {
+                    "event": "Explanation of Action vs Inaction",
+                    "shlokas": [16, 17, 18, 19],
+                    "characters": ["Krishna"]
+                },
+                {
+                    "event": "Teaching about Sense Control",
+                    "shlokas": [34, 35, 36, 37],
+                    "characters": ["Krishna"]
+                },
+                {
+                    "event": "Culmination in Self-Realization",
+                    "shlokas": [43, 44, 45],
+                    "characters": ["Krishna"]
                 }
             ],
-            "philosophical_progression": "Error parsing philosophical progression. Error: Expecting value: line 1 column 1 (char 0)",
-            "chapter_relevance": "Error parsing chapter relevance. Error: Expecting value: line 1 column 1 (char 0)"
+            "philosophical_progression": "Chapter 3 begins with establishing the importance of action over inaction and introduces the concept of Karma Yoga. It then explains how actions should be performed without attachment, emphasizing the difference between action and inaction. The chapter progresses to discuss the role of the senses and their control, the concept of performing actions as sacrifice, and ultimately connects these practices to self-realization. Throughout the chapter, Krishna emphasizes that action is superior to inaction and explains how to perform actions in a way that leads to liberation.",
+            "chapter_relevance": "Chapter 3 is crucial as it establishes the fundamental principles of Karma Yoga, which is essential for spiritual progress. It addresses the common confusion between action and inaction, and provides practical guidance on how to perform actions without getting bound by them. This chapter is particularly relevant for those seeking to balance their worldly duties with spiritual aspirations, showing how every action can become a means for spiritual evolution when performed with the right understanding and attitude."
         },
         {
             "number": 4,
