@@ -1,7 +1,6 @@
-streamlit
-networkx
-matplotlib
-streamlit-d3graph
-scipy
-scikit-learn
-streamlit-agraph
+streamlit>=1.28.0
+networkx>=3.1
+streamlit-agraph>=0.0.45
+pandas>=2.0.0
+numpy>=1.24.0
+gTTS>=2.3.2 
