@@ -121,10 +121,11 @@ The Bhagavad Gita offers guidance for various life challenges. Below is a mappin
 1. **Enhanced Analysis**: Utilizing GNNs allows for deeper examination of the Gita's teachings and facilitates exploration of relationships between philosophical concepts.
   
 2. **Problem-Solving Framework**: The project aims to create mappings of common human problems addressed in the Gita, offering practical solutions based on authentic interpretations.
+![GraphGita Overview](images/json2graph.png)
 
-3. **Interactive Exploration**: MCTS enables users to engage with the material dynamically, simulating various paths through the text.
+4. **Interactive Exploration**: MCTS enables users to engage with the material dynamically, simulating various paths through the text.
 
-4. **Scientific Contribution**: This initiative merges ancient philosophy with modern computational techniques, contributing valuable Indic datasets for research in humanities and AI fields.
+5. **Scientific Contribution**: This initiative merges ancient philosophy with modern computational techniques, contributing valuable Indic datasets for research in humanities and AI fields.
 
 ## Technical Implementation
 
