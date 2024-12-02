@@ -54,6 +54,7 @@ The Bhagavad Gita consists of 18 chapters, each focusing on different aspects of
 | 18 | The Way of Liberation | Moksa Sanyasa Yoga | 78 | Conclusion and path to liberation |
 
 **Total Verses**: 701
+![GraphGita Overview](images/chapterrelationships.PNG)
 
 ### Why Graph the Gita?
 
