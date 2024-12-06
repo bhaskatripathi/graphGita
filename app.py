@@ -9,6 +9,63 @@ from gtts import gTTS
 import os
 from io import BytesIO
 
+# Add this near the top of the file, with other helper functions
+def display_shloka_content(shloka, chapter_num):
+    """Helper function to display shloka content with audio controls"""
+    # Sanskrit Text Section
+    shloka_text = shloka.get('sanskrit_text', '')
+    if shloka_text:
+        col1, col2 = st.columns([1, 4])
+        with col1:
+            if st.button("🔊 Sanskrit", 
+                       key=f"sanskrit_theme_{chapter_num}_{shloka['shloka_number']}"):
+                audio_file = generate_audio(
+                    shloka_text,
+                    filename=f"sanskrit_{chapter_num}_{shloka['shloka_number']}.mp3",
+                    lang='hi'
+                )
+                st.audio(audio_file, format="audio/mp3")
+        with col2:
+            st.markdown("**Sanskrit Text:**")
+            st.text(shloka_text)
+    
+    # English sections
+    if 'transliteration' in shloka:
+        # Create English text without transliteration
+        english_text = f"Meaning: {shloka.get('meaning', '')}\n\n"
+        if 'interpretation' in shloka:
+            english_text += f"Interpretation: {shloka['interpretation']}\n\n"
+        if 'life_application' in shloka:
+            english_text += f"Life Application: {shloka['life_application']}"
+        
+        col1, col2 = st.columns([1, 4])
+        with col1:
+            if st.button("🔊 Explanation", 
+                       key=f"english_theme_{chapter_num}_{shloka['shloka_number']}"):
+                audio_file = generate_audio(
+                    english_text,
+                    filename=f"english_{chapter_num}_{shloka['shloka_number']}.mp3",
+                    lang='en'
+                )
+                st.audio(audio_file, format="audio/mp3")
+        
+        # Display text sections
+        with col2:
+            if 'transliteration' in shloka:
+                st.markdown("**Transliteration:**")
+                st.write(shloka['transliteration'])
+            
+            st.markdown("**Meaning:**")
+            st.write(shloka.get('meaning', ''))
+            
+            if 'interpretation' in shloka:
+                st.markdown("**Interpretation:**")
+                st.write(shloka['interpretation'])
+            
+            if 'life_application' in shloka:
+                st.markdown("**Life Application:**")
+                st.write(shloka['life_application'])
+
 # Function to generate audio from text
 def generate_audio(text: str, filename: str = "shloka.mp3", lang: str = 'hi'):
     """
@@ -288,16 +345,17 @@ class GitaGraphRAG:
         """Display chapter insights with character-centric relationships."""
         st.header("Ontology of Characters")
 
-        # Chapter selection
+        # Move chapter selection to main content area with horizontal radio buttons
         chapters = self.data.get("chapters", [])
         if not chapters:
             st.error("No chapters found in the data.")
             return
 
-        selected_chapter_num = st.sidebar.selectbox(
-            "Select a Chapter", 
+        selected_chapter_num = st.radio(
+            "Select Chapter",
             [chapter["number"] for chapter in chapters],
-            format_func=lambda num: f"Chapter {num}"
+            format_func=lambda x: f"Chapter {x}",
+            horizontal=True  # Makes the radio buttons appear horizontally
         )
 
         selected_chapter = next(
@@ -508,12 +566,13 @@ def main():
     if view_option == "Chapter Topology":
         st.header("Chapter Topology")
         
-        # Select chapter
+        # Move chapter selection to main content area with horizontal radio buttons
         chapter_numbers = [ch['number'] for ch in rag.data['chapters']]
-        selected_chapter_num = st.sidebar.selectbox(
+        selected_chapter_num = st.radio(
             "Select Chapter",
             sorted(chapter_numbers),
-            key='chapter_topology_select'  # Add a unique key
+            format_func=lambda x: f"Chapter {x}",
+            horizontal=True  # Makes the radio buttons appear horizontally
         )
         
         # Get selected chapter data
@@ -711,12 +770,15 @@ def main():
         theme_format = {theme: f"{theme} ({count} shlokas)" 
                        for theme, count in theme_data}
         
-        # Move theme selection to sidebar with count information
-        selected_theme = st.sidebar.selectbox(
-            "Select a Theme to Explore",
-            theme_options,
-            format_func=lambda x: theme_format[x]
-        )
+        # Move theme selection to main content area with a searchable dropdown
+        col1, col2 = st.columns([2, 1])  # Create two columns for better layout
+        with col1:
+            selected_theme = st.selectbox(
+                "Select a Theme to Explore",
+                theme_options,
+                format_func=lambda x: theme_format[x],
+                key="theme_selector"
+            )
         
         if selected_theme:
             st.subheader(f"Exploring: {selected_theme}")
@@ -740,29 +802,30 @@ def main():
                     value=total_shlokas
                 )
             
-            # Display related chapters in tabs
-            if related_chapters:
-                st.markdown("### Related Chapters")
-                chapter_tabs = st.tabs([f"Chapter {ch['number']}: {ch['name']}" 
-                                      for ch in related_chapters])
-                
-                for tab, chapter in zip(chapter_tabs, related_chapters):
-                    with tab:
-                        # Summary
-                        st.markdown("#### Summary")
-                        st.write(chapter['summary'])
+            # Create tabs for Chapters and Theme Relationships
+            chapters_tab, relationships_tab = st.tabs(["Related Chapters", "Theme Relationships"])
+            
+            with chapters_tab:
+                if related_chapters:
+                    for chapter in related_chapters:
+                        st.markdown(f"### Chapter {chapter['number']}: {chapter['name']}")
                         
-                        # Main Theme with markdown styling
-                        st.markdown("#### Main Theme")
-                        st.markdown(f"🎯 ***{chapter['main_theme']}***")
+                        # Summary in a collapsible section
+                        with st.expander("Chapter Summary & Themes", expanded=False):
+                            st.markdown("#### Summary")
+                            st.write(chapter['summary'])
+                            
+                            # Main Theme with markdown styling
+                            st.markdown("#### Main Theme")
+                            st.markdown(f"🎯 ***{chapter['main_theme']}***")
+                            
+                            # Philosophical aspects with decorative markdown
+                            if 'philosophical_aspects' in chapter:
+                                st.markdown("#### Philosophical Aspects")
+                                for aspect in chapter['philosophical_aspects']:
+                                    st.markdown(f"✨ :blue[{aspect}]")
                         
-                        # Philosophical aspects with decorative markdown
-                        if 'philosophical_aspects' in chapter:
-                            st.markdown("#### Philosophical Aspects")
-                            for aspect in chapter['philosophical_aspects']:
-                                st.markdown(f"✨ :blue[{aspect}]")
-                                              
-                        # Show relevant shlokas if they contain keywords from the theme
+                        # Show relevant shlokas directly (not in an expander)
                         if 'shlokas' in chapter:
                             relevant_shlokas = [
                                 shloka for shloka in chapter['shlokas']
@@ -771,74 +834,26 @@ def main():
                             ]
                             
                             if relevant_shlokas:
-                                st.markdown("**Relevant Shlokas:**")
-                                # Create tabs for shlokas
-                                shloka_tabs = st.tabs([f"Shloka {s['shloka_number']}" for s in relevant_shlokas])
-                                
-                                for shloka_tab, shloka in zip(shloka_tabs, relevant_shlokas):
-                                    with shloka_tab:
-                                        # Sanskrit Text Section
-                                        shloka_text = shloka.get('sanskrit_text', '')
-                                        if shloka_text:
-                                            col1, col2 = st.columns([1, 4])
-                                            with col1:
-                                                if st.button("🔊 Sanskrit", 
-                                                           key=f"sanskrit_theme_{chapter['number']}_{shloka['shloka_number']}"):
-                                                    audio_file = generate_audio(
-                                                        shloka_text,
-                                                        filename=f"sanskrit_{chapter['number']}_{shloka['shloka_number']}.mp3",
-                                                        lang='hi'
-                                                    )
-                                                    st.audio(audio_file, format="audio/mp3")
-                                            with col2:
-                                                st.markdown("**Sanskrit Text:**")
-                                                st.text(shloka_text)
-                                        
-                                        # English sections
-                                        if 'transliteration' in shloka:
-                                            # Create English text without transliteration
-                                            english_text = f"Meaning: {shloka.get('meaning', '')}\n\n"
-                                            if 'interpretation' in shloka:
-                                                english_text += f"Interpretation: {shloka['interpretation']}\n\n"
-                                            if 'life_application' in shloka:
-                                                english_text += f"Life Application: {shloka['life_application']}"
-                                            
-                                            col1, col2 = st.columns([1, 4])
-                                            with col1:
-                                                if st.button("🔊 Explanation", 
-                                                           key=f"english_theme_{chapter['number']}_{shloka['shloka_number']}"):
-                                                    audio_file = generate_audio(
-                                                        english_text,
-                                                        filename=f"english_{chapter['number']}_{shloka['shloka_number']}.mp3",
-                                                        lang='en'
-                                                    )
-                                                    st.audio(audio_file, format="audio/mp3")
-                                            
-                                            # Display text sections
-                                            with col2:
-                                                if 'transliteration' in shloka:
-                                                    st.markdown("**Transliteration:**")
-                                                    st.write(shloka['transliteration'])
-                                                
-                                                st.markdown("**Meaning:**")
-                                                st.write(shloka['meaning'])
-                                                
-                                                if 'interpretation' in shloka:
-                                                    st.markdown("**Interpretation:**")
-                                                    st.write(shloka['interpretation'])
-                                                
-                                                if 'life_application' in shloka:
-                                                    st.markdown("**Life Application:**")
-                                                    st.write(shloka['life_application'])
-
-                                                                            # Display the graph
-                        st.markdown("#### Theme Relationships")
+                                st.markdown("#### Relevant Shlokas")
+                                for shloka in relevant_shlokas:
+                                    st.markdown(f"**Shloka {shloka['shloka_number']}**")
+                                    display_shloka_content(shloka, chapter['number'])
+                                    st.markdown("---")  # Add separator between shlokas
+                        
+                        st.markdown("---")  # Add separator between chapters
+            
+            with relationships_tab:
+                st.markdown("### Theme Relationships")
+                # Create tabs for each chapter's relationship graph
+                chapter_tabs = st.tabs([f"Chapter {chapter['number']}" for chapter in related_chapters])
+                
+                # Display each chapter's relationship graph in its own tab
+                for tab, chapter in zip(chapter_tabs, related_chapters):
+                    with tab:
+                        st.markdown(f"#### {chapter['name']}")
                         nodes, edges = rag.visualize_theme_relationships(selected_theme, [chapter])
                         config = create_agraph_config()
                         agraph(nodes=nodes, edges=edges, config=config)
-                        
-                        # Add a divider between chapters
-                        st.markdown("---")
 
     if view_option == "Ontology of Characters":
         rag.display_chapter_insights()
