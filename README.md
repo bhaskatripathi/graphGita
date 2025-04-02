@@ -7,6 +7,8 @@ This project, **graphGita**, is the first modern re-interpretation of the Bhagav
 ### Demo app link
 https://graphgita.streamlit.app/
 
+![Alt text](graphGita.gif) 
+
 ### Why Graph the Bhagvad Gita to Re-Understand it in Modern Times ?
 
 There is a significant need to reinterpret ancient texts like the Bhagavad Gita in today's context. The teachings offer valuable perspectives on ethics, human behavior, and spirituality that remain applicable. However, traditional formats often fail to engage modern readers effectively. Advanced technologies, including knowledge graphs and machine learning, can make the wisdom of the Gita more accessible and relevant.
